@@ -28,6 +28,7 @@ export async function createOrReplaceComment({
   title,
   shaInfo,
   routesTable,
+  dynamicTable,
   strategy,
 }: {
   octokit: Octokit;
@@ -35,6 +36,7 @@ export async function createOrReplaceComment({
   title: string;
   shaInfo: string;
   routesTable: string | null;
+  dynamicTable: string | null;
   strategy: ActionInputs['commentStrategy'];
 }): Promise<void> {
   const existingComment = await findCommentByTextMatch({
@@ -43,7 +45,12 @@ export async function createOrReplaceComment({
     text: title,
   });
 
-  const body = formatTextFragments(title, shaInfo, routesTable ?? FALLBACK_COMPARISON_TEXT);
+  const body = formatTextFragments(
+    title,
+    shaInfo,
+    routesTable ?? FALLBACK_COMPARISON_TEXT,
+    dynamicTable ?? FALLBACK_COMPARISON_TEXT,
+  );
 
   if (existingComment) {
     console.log(`Updating comment ${existingComment.id}`);
