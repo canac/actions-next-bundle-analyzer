@@ -60,7 +60,12 @@ export async function createOrReplaceComment({
       body,
     });
     console.log(`Done with status ${response.status}`);
-  } else if (!existingComment && !routesTable && strategy === 'skip-insignificant') {
+  } else if (
+    !existingComment &&
+    !routesTable &&
+    !dynamicTable &&
+    strategy === 'skip-insignificant'
+  ) {
     console.log(`Skipping comment [${title}]: no significant changes`);
   } else {
     console.log(`Creating comment on PR ${issueNumber}`);

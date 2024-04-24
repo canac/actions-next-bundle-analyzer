@@ -54,13 +54,15 @@ function loadReactLoadableManifest(appChunks: string[], workingDir: string): Bui
     'utf-8',
   );
   const content = JSON.parse(file) as ReactLoadableManifest;
-  const pages = {} as BuildManifest['pages'];
-  Object.keys(content).map((item) => {
+  const pages: BuildManifest['pages'] = {};
+  Object.keys(content).forEach((item) => {
+    if (item.includes('/node_modules/')) {
+      return;
+    }
     const fileList = getFiles(content[item]);
     const uniqueFileList = Array.from(new Set(fileList));
     pages[item] = uniqueFileList.filter(
-      (file) =>
-        !appChunks.find((chunkFile) => file === chunkFile && !file.includes('/node_modules/')),
+      (file) => !appChunks.find((chunkFile) => file === chunkFile),
     );
   });
   return {
